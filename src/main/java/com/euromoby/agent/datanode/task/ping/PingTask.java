@@ -24,6 +24,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.euromoby.agent.datanode.core.http.HttpClientProvider;
+import com.euromoby.agent.datanode.core.storage.FileStorage;
 import com.google.gson.Gson;
 
 @Component
@@ -56,7 +57,10 @@ public class PingTask implements InitializingBean {
 			PingResponse pingResponse = sendPing(pingRequest);
 			log.info("Ping response: " + pingResponse.getUpdateTime());
 		} catch (Exception e) {
-			log.error("Ping failed", e);
+			log.warn("Ping failed");
+			if (log.isDebugEnabled()) {
+				log.debug("Ping failed", e);
+			}
 		}
 
 	}
@@ -66,7 +70,6 @@ public class PingTask implements InitializingBean {
 		RequestConfig.Builder requestConfigBuilder = httpClientProvider.createRequestConfigBuilder();
 
 		StringEntity requestEntity = new StringEntity(gson.toJson(pingRequest), ContentType.APPLICATION_JSON);
-
 		HttpUriRequest request = RequestBuilder.post(pingUrl).setConfig(requestConfigBuilder.build()).setEntity(requestEntity).build();
 
 		CloseableHttpResponse response = httpClientProvider.executeRequest(request);
@@ -90,7 +93,7 @@ public class PingTask implements InitializingBean {
 		PingRequest request = new PingRequest();
 		request.setCurrentTime(System.currentTimeMillis());
 
-		long freeSpace = Files.getFileStore(Paths.get(".")).getUsableSpace();
+		long freeSpace = Files.getFileStore(Paths.get(FileStorage.getUserHome())).getUsableSpace();
 		request.setFreeSpace(freeSpace);
 
 		return request;

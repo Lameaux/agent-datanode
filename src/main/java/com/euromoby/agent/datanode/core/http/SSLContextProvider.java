@@ -4,6 +4,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -44,4 +45,13 @@ public class SSLContextProvider implements InitializingBean {
 		return sslContext;
 	}
 
+	public SSLEngine newServerSSLEngine() {
+		if (sslContext == null) {
+			throw new IllegalStateException("SSLContext is not initialized");
+		}
+		SSLEngine sslEngine = sslContext.createSSLEngine();
+		sslEngine.setUseClientMode(false);
+		return sslEngine;
+	}	
+	
 }
