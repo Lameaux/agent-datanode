@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.euromoby.agent.datanode.core.http.ReadWriteTimeoutHandler;
-import com.euromoby.agent.datanode.core.http.SSLContextProvider;
+import com.euromoby.agent.http.SSLContextProvider;
 
 @Component
 public class RestServerInitializer extends ChannelInitializer<SocketChannel> {

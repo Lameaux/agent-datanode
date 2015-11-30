@@ -18,5 +18,17 @@
 	<context:property-placeholder location="classpath:config.properties"/>
 
 	<task:annotation-driven/>
+	
+	<bean id="sslContextProvider" class="com.euromoby.agent.http.SSLContextProvider">
+		<constructor-arg value="${keystore.password}"></constructor-arg>
+	</bean>
+
+	<bean id="httpClientProvider" class="com.euromoby.agent.http.HttpClientProvider">
+		<property name="sslContextProvider" ref="sslContextProvider"></property>
+		<property name="httpUserAgent" value="${http.useragent}" ></property>
+		<property name="httpProxyHost" value="${http.proxy.host}" ></property>
+		<property name="httpProxyPort" value="${http.proxy.port}" ></property>
+		<property name="httpClientTimeout" value="${http.client.timeout}" ></property>
+	</bean>
 
 </beans>

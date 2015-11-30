@@ -22,7 +22,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.euromoby.agent.datanode.core.utils.Strings;
+import com.euromoby.agent.utils.Strings;
 
 
 public class HttpUtils {

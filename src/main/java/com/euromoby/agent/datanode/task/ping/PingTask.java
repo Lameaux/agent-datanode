@@ -23,8 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.euromoby.agent.datanode.core.http.HttpClientProvider;
 import com.euromoby.agent.datanode.core.storage.FileStorage;
+import com.euromoby.agent.http.HttpClientProvider;
+import com.euromoby.agent.model.PingRequest;
+import com.euromoby.agent.model.PingResponse;
 import com.google.gson.Gson;
 
 @Component

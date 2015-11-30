@@ -25,9 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.euromoby.agent.datanode.Tuple;
 import com.euromoby.agent.datanode.core.http.HttpResponseProvider;
 import com.euromoby.agent.datanode.rest.RestException;
+import com.euromoby.agent.types.Tuple;
 
 
 public abstract class RestHandlerBase implements RestHandler {
