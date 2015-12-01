@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.euromoby.agent.Constants;
 import com.euromoby.agent.datanode.core.storage.FileStorage;
 import com.euromoby.agent.http.HttpClientProvider;
 import com.euromoby.agent.model.PingRequest;
@@ -35,22 +36,20 @@ public class PingTask implements InitializingBean {
 	private static final Logger log = LoggerFactory.getLogger(PingTask.class);
 	private static final Gson gson = new Gson();
 
-	private static final String PING_URL = "/ping";
-
 	@Autowired
 	private HttpClientProvider httpClientProvider;
 	
 	@Autowired
 	private FileStorage fileStorage;
 
-	@Value("${masternode.host}")
-	private String masternodeHost;
+	@Value("${masternode.url}")
+	private String masternodeUrl;
 
 	private String pingUrl;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		pingUrl = "http://" + masternodeHost + PING_URL;
+		pingUrl = masternodeUrl + Constants.MASTER_URL_PING;
 	}
 
 	@Scheduled(fixedDelayString = "${ping.delay}")

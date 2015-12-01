@@ -1,4 +1,4 @@
-package com.euromoby.agent.datanode.rest.handler.upload_request;
+package com.euromoby.agent.datanode.rest.handler.ticket;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -16,6 +16,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.euromoby.agent.Constants;
 import com.euromoby.agent.datanode.core.http.HttpResponseProvider;
 import com.euromoby.agent.datanode.rest.handler.RestHandlerBase;
 import com.euromoby.agent.datanode.upload.UploadTicketService;
@@ -23,9 +24,9 @@ import com.euromoby.agent.model.UploadTicket;
 import com.google.gson.Gson;
 
 @Component
-public class UploadRequestHandler extends RestHandlerBase {
+public class UploadTicketHandler extends RestHandlerBase {
 
-	public static final String URL = "/upload/ticket";	
+	public static final String URL = Constants.NODE_URL_TICKET_UPLOAD;	
 
 	private static final Gson gson = new Gson();
 	

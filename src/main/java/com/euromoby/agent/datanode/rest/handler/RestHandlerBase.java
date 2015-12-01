@@ -140,7 +140,7 @@ public abstract class RestHandlerBase implements RestHandler {
 								fileUpload.renameTo(tempFile);
 								requestFiles.put(fileUpload.getName(), tempFile);
 								if (fileUpload.getFilename() != null) {
-									requestParameters.put("agent_file_" + fileUpload.getName(), Arrays.asList(fileUpload.getFilename()));
+									requestParameters.put("agent_filename_" + fileUpload.getName(), Arrays.asList(fileUpload.getFilename()));
 								}								
 							}
 						}

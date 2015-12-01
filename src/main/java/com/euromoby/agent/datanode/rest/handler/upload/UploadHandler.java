@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.euromoby.agent.Constants;
 import com.euromoby.agent.datanode.core.http.HttpResponseProvider;
 import com.euromoby.agent.datanode.core.http.HttpUtils;
 import com.euromoby.agent.datanode.core.storage.FileStorage;
@@ -27,10 +28,10 @@ import com.euromoby.agent.utils.Lists;
 @Component
 public class UploadHandler extends RestHandlerBase {
 
-	public static final String URL = "/upload";
+	public static final String URL = Constants.NODE_URL_UPLOAD;
 	private static final Pattern URL_PATTERN = Pattern.compile(URL + "/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})");
 
-	private static final String REQUEST_INPUT_FILENAME = "filename";
+	private static final String REQUEST_INPUT_FILENAME = "agent_filename_file";
 	private static final String REQUEST_INPUT_FILE = "file";
 
 	@Autowired
