@@ -9,9 +9,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileStorage {
 
+	private static final String AGENT_DATA = "agent" + File.separator + "data";
+	
 	private static final Logger log = LoggerFactory.getLogger(FileStorage.class);		
 	
-	public static String getUserHome() {
+	private final String dataHome;
+	
+	public FileStorage() {
+		dataHome = getUserHome() + File.separator + AGENT_DATA;
+		File dataHomeDir = new File(dataHome);
+		if (!dataHomeDir.exists()) {
+			dataHomeDir.mkdirs();
+		}
+	}
+	
+	public String getDataHome() {
+		return dataHome;
+	}
+	
+	private static String getUserHome() {
 		return System.getProperty("user.home");
 	}
 	

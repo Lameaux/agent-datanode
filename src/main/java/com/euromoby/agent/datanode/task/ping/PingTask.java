@@ -39,6 +39,9 @@ public class PingTask implements InitializingBean {
 
 	@Autowired
 	private HttpClientProvider httpClientProvider;
+	
+	@Autowired
+	private FileStorage fileStorage;
 
 	@Value("${masternode.host}")
 	private String masternodeHost;
@@ -95,7 +98,7 @@ public class PingTask implements InitializingBean {
 		PingRequest request = new PingRequest();
 		request.setCurrentTime(System.currentTimeMillis());
 
-		long freeSpace = Files.getFileStore(Paths.get(FileStorage.getUserHome())).getUsableSpace();
+		long freeSpace = Files.getFileStore(Paths.get(fileStorage.getDataHome())).getUsableSpace();
 		request.setFreeSpace(freeSpace);
 
 		return request;

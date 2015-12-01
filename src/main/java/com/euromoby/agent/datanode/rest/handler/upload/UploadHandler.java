@@ -20,6 +20,7 @@ import com.euromoby.agent.datanode.core.http.HttpUtils;
 import com.euromoby.agent.datanode.core.storage.FileStorage;
 import com.euromoby.agent.datanode.rest.RestException;
 import com.euromoby.agent.datanode.rest.handler.RestHandlerBase;
+import com.euromoby.agent.datanode.upload.UploadTicketService;
 import com.euromoby.agent.utils.Lists;
 
 
@@ -34,6 +35,9 @@ public class UploadHandler extends RestHandlerBase {
 
 	@Autowired
 	private FileStorage fileStorage;
+	
+	@Autowired
+	private UploadTicketService uploadTicketService;
 	
 	@Override
 	public boolean matchUri(URI uri) {
@@ -50,7 +54,11 @@ public class UploadHandler extends RestHandlerBase {
 		if (!m.matches()) {
 			throw new RestException(HttpResponseStatus.NOT_FOUND, "Not found");
 		}
-		String uploadTicket = m.group(1);		
+		String uploadTicketId = m.group(1);
+		
+		if (!uploadTicketService.validateTicketId(uploadTicketId)) {
+			throw new RestException(HttpResponseStatus.NOT_FOUND, "Not found");			
+		}
 		
 		String fileName = Lists.getFirst(postParameters.get(REQUEST_INPUT_FILENAME));
 		File tempUploadedFile = uploadFiles.get(REQUEST_INPUT_FILE);
@@ -59,7 +67,7 @@ public class UploadHandler extends RestHandlerBase {
 			throw new RestException("Parameter is missing: " + REQUEST_INPUT_FILE);
 		}
 
-		fileStorage.storeFile(uploadTicket, fileName, tempUploadedFile);
+		fileStorage.storeFile(uploadTicketId, fileName, tempUploadedFile);
 
 		HttpResponseProvider httpResponseProvider = new HttpResponseProvider(request);
 		return httpResponseProvider.createHttpResponse(HttpResponseStatus.OK, HttpUtils.fromString("OK"));
