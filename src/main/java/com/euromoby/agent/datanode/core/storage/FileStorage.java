@@ -31,9 +31,9 @@ public class FileStorage {
 		return System.getProperty("user.home");
 	}
 	
-	public void storeFile(String uploadTicket, String fileName, File file) {
+	public void storeFile(String fileId, File file) {
 		
-		log.info("File uploaded. Ticket {}, fileName {} ", uploadTicket, fileName);
+		log.info("File uploaded. fileId {} ", fileId);
 		
 //		File targetFile = new File(new File(config.getAgentFilesPath()), location);
 //		File parentDir = targetFile.getParentFile();

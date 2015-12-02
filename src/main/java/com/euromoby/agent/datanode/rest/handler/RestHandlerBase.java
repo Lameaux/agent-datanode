@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,9 +138,6 @@ public abstract class RestHandlerBase implements RestHandler {
 								File tempFile = File.createTempFile("agent", "upload");
 								fileUpload.renameTo(tempFile);
 								requestFiles.put(fileUpload.getName(), tempFile);
-								if (fileUpload.getFilename() != null) {
-									requestParameters.put("agent_filename_" + fileUpload.getName(), Arrays.asList(fileUpload.getFilename()));
-								}								
 							}
 						}
 

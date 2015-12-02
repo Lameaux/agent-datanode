@@ -57,9 +57,13 @@ public class PingTask implements InitializingBean {
 
 		try {
 			PingRequest pingRequest = createPingRequest();
-			log.info("Ping {} ", pingUrl);
+			if (log.isDebugEnabled()) {
+				log.debug("Ping {} ", pingUrl);
+			}
 			PingResponse pingResponse = sendPing(pingRequest);
-			log.info("Ping response: " + pingResponse.getUpdateTime());
+			if (log.isDebugEnabled()) {
+				log.debug("Ping response: " + pingResponse.getUpdateTime());
+			}
 		} catch (Exception e) {
 			log.warn("Ping failed");
 			if (log.isDebugEnabled()) {

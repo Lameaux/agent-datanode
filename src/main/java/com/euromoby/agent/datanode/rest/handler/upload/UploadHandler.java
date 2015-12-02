@@ -1,9 +1,13 @@
 package com.euromoby.agent.datanode.rest.handler.upload;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.util.CharsetUtil;
 
 import java.io.File;
 import java.net.URI;
@@ -17,28 +21,25 @@ import org.springframework.stereotype.Component;
 
 import com.euromoby.agent.Constants;
 import com.euromoby.agent.datanode.core.http.HttpResponseProvider;
-import com.euromoby.agent.datanode.core.http.HttpUtils;
 import com.euromoby.agent.datanode.core.storage.FileStorage;
 import com.euromoby.agent.datanode.rest.RestException;
 import com.euromoby.agent.datanode.rest.handler.RestHandlerBase;
-import com.euromoby.agent.datanode.upload.UploadTicketService;
-import com.euromoby.agent.utils.Lists;
+import com.euromoby.agent.model.DatanodeFile;
+import com.google.gson.Gson;
 
 
 @Component
 public class UploadHandler extends RestHandlerBase {
 
+	private static final Gson gson = new Gson();	
+	
 	public static final String URL = Constants.NODE_URL_UPLOAD;
-	private static final Pattern URL_PATTERN = Pattern.compile(URL + "/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})");
+	private static final Pattern URL_PATTERN = Pattern.compile(URL + "/([0-9a-zA-Z]+)");
 
-	private static final String REQUEST_INPUT_FILENAME = "agent_filename_file";
 	private static final String REQUEST_INPUT_FILE = "file";
 
 	@Autowired
 	private FileStorage fileStorage;
-	
-	@Autowired
-	private UploadTicketService uploadTicketService;
 	
 	@Override
 	public boolean matchUri(URI uri) {
@@ -55,23 +56,27 @@ public class UploadHandler extends RestHandlerBase {
 		if (!m.matches()) {
 			throw new RestException(HttpResponseStatus.NOT_FOUND, "Not found");
 		}
-		String uploadTicketId = m.group(1);
+		String fileId = m.group(1);
 		
-		if (!uploadTicketService.validateTicketId(uploadTicketId)) {
-			throw new RestException(HttpResponseStatus.NOT_FOUND, "Not found");			
-		}
-		
-		String fileName = Lists.getFirst(postParameters.get(REQUEST_INPUT_FILENAME));
 		File tempUploadedFile = uploadFiles.get(REQUEST_INPUT_FILE);
 
 		if (tempUploadedFile == null) {
 			throw new RestException("Parameter is missing: " + REQUEST_INPUT_FILE);
 		}
 
-		fileStorage.storeFile(uploadTicketId, fileName, tempUploadedFile);
+		fileStorage.storeFile(fileId, tempUploadedFile);
 
+		DatanodeFile datanodeFile = new DatanodeFile();
+		datanodeFile.setId(fileId);
+		datanodeFile.setSize(tempUploadedFile.length());
+
+		String jsonResponse = gson.toJson(datanodeFile);
+		ByteBuf content = Unpooled.copiedBuffer(jsonResponse, CharsetUtil.UTF_8);
 		HttpResponseProvider httpResponseProvider = new HttpResponseProvider(request);
-		return httpResponseProvider.createHttpResponse(HttpResponseStatus.OK, HttpUtils.fromString("OK"));
+		FullHttpResponse response = httpResponseProvider.createHttpResponse(HttpResponseStatus.OK, content);
+		response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/json; charset=UTF-8");		
+		
+		return response;
 	}
 
 
