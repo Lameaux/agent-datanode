@@ -1,7 +1,9 @@
 package com.euromoby.agent.datanode.core.storage;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -31,17 +33,14 @@ public class FileStorage {
 		return System.getProperty("user.home");
 	}
 	
-	public void storeFile(String fileId, File file) {
-		
-		log.info("File uploaded. fileId {} ", fileId);
-		
-//		File targetFile = new File(new File(config.getAgentFilesPath()), location);
-//		File parentDir = targetFile.getParentFile();
-//		if (!parentDir.exists() && !parentDir.mkdirs()) {
-//			throw new RestException("Unable to store file");
-//		}
-//
-//		FileUtils.copyFile(tempUploadedFile, targetFile);		
+	public void storeFile(String fileId, File tempFile) throws IOException {
+		File targetFile = new File(new File(dataHome), fileId);
+		FileUtils.copyFile(tempFile, targetFile);		
+		log.debug("File uploaded. fileId {} ", fileId);
 	}
+
+	public File getFile(String fileId) {
+		return new File(new File(dataHome), fileId);
+	}	
 	
 }
